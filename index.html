@@ -248,8 +248,11 @@
     }
     .gallery-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 20px;
+    }
+    .gallery-item.wide {
+      grid-column: span 2;
     }
     .gallery-item {
       border-radius: 16px;
@@ -281,6 +284,7 @@
     }
     @media (max-width: 768px) {
       .gallery-grid { grid-template-columns: 1fr; }
+      .gallery-item.wide { grid-column: span 1; }
     }
 
     /* ── Features ── */
@@ -723,6 +727,10 @@
         <img src="screenshot-reminders.png" alt="Reminders — AI-parsed timed notifications" />
         <span class="gallery-label">Reminders</span>
       </div>
+      <div class="gallery-item wide">
+        <img src="screenshot-notification.png" alt="Smart Notification — AI-powered timed reminders with system alerts" />
+        <span class="gallery-label">Smart Notifications</span>
+      </div>
       <div class="gallery-item">
         <img src="screenshot-settings.png" alt="Settings — bring your own AI model" />
         <span class="gallery-label">Settings</span>
@@ -816,7 +824,7 @@
           <li>Custom global hotkey</li>
           <li>Priority support</li>
         </ul>
-        <a href="#download" class="pricing-btn filled" onclick="handleDownload(event)">Start Free Trial</a>
+        <a href="#download" class="pricing-btn filled" onclick="handleDownload(event)">Subscribe — $4.90/mo</a>
       </div>
     </div>
   </section>
