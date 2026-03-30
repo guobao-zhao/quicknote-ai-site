@@ -620,7 +620,7 @@
         <a href="#features">Features</a>
         <a href="#workflow">Workflow</a>
         <a href="#pricing">Pricing</a>
-        <a href="#download" class="nav-cta">Download Free</a>
+        <a href="#download" class="nav-cta" onclick="handleDownload(event)">Download Free</a>
       </div>
     </div>
   </nav>
@@ -633,7 +633,7 @@
       Zero wait. Zero friction. Your AI-powered smart memo captures ideas, classifies notes, sends reminders — so every flash of inspiration becomes action.
     </p>
     <div class="hero-actions animate-in delay-3">
-      <a href="#download" class="btn-primary">
+      <a href="#download" class="btn-primary" onclick="handleDownload(event)">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         Download for macOS
       </a>
@@ -718,7 +718,7 @@
           <li>Global hotkey</li>
           <li>Basic reminders</li>
         </ul>
-        <a href="#download" class="pricing-btn outline">Get Started</a>
+        <a href="#download" class="pricing-btn outline" onclick="handleDownload(event)">Get Started</a>
       </div>
       <div class="pricing-card pro">
         <h3>Pro</h3>
@@ -733,7 +733,7 @@
           <li>Custom global hotkey</li>
           <li>Priority support</li>
         </ul>
-        <a href="#download" class="pricing-btn filled">Start Free Trial</a>
+        <a href="#download" class="pricing-btn filled" onclick="handleDownload(event)">Start Free Trial</a>
       </div>
     </div>
   </section>
@@ -744,7 +744,7 @@
     <p>
       Download QuickNote AI and experience AI-powered note-taking. Available now on macOS, with Windows and Linux coming soon.
     </p>
-    <a href="#" class="btn-primary" id="download-btn">
+    <a href="#" class="btn-primary" id="download-btn" onclick="handleDownload(event)">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
       Download for macOS
     </a>
@@ -764,7 +764,20 @@
     <div class="footer-copy">© 2026 QuickNote AI. All rights reserved.</div>
   </footer>
 
+  <!-- Download Toast -->
+  <div id="download-toast" style="display:none;position:fixed;bottom:32px;left:50%;transform:translateX(-50%);background:#1a1533;color:#fff;padding:16px 28px;border-radius:16px;font-size:14px;font-weight:600;box-shadow:0 12px 40px rgba(0,0,0,0.2);z-index:200;text-align:center;max-width:420px;line-height:1.6;">
+    🚀 QuickNote AI is in final testing!<br/>
+    <span style="font-size:12px;color:rgba(255,255,255,0.6);font-weight:400;">Leave your email at <a href="mailto:support@quicknote.ai" style="color:#8b5cf6;">support@quicknote.ai</a> and we'll notify you when the download is ready.</span>
+  </div>
+
   <script>
+    function handleDownload(e) {
+      e.preventDefault();
+      const toast = document.getElementById('download-toast');
+      toast.style.display = 'block';
+      setTimeout(() => { toast.style.display = 'none'; }, 5000);
+    }
+
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
