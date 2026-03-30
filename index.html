@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QuickNote AI — Capture Ideas Instantly, AI Handles the Rest</title>
+  <meta name="description" content="AI-powered smart memo app. Capture ideas, manage tasks, get smart reminders. Never let a thought slip away." />
+  <meta name="keywords" content="QuickNote AI, note taking, AI memo, smart reminders, productivity, macOS app" />
+  <meta property="og:title" content="QuickNote AI — Capture Ideas Instantly" />
+  <meta property="og:description" content="AI-powered smart memo. Capture anything, AI classifies everything." />
+  <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #faf9ff;
+      --bg-dark: #0c0a1a;
+      --text: #1a1533;
+      --text-muted: #6b6585;
+      --accent: #6c3ce0;
+      --accent-light: #8b5cf6;
+      --accent-glow: rgba(108, 60, 224, 0.15);
+      --accent-glow-strong: rgba(108, 60, 224, 0.25);
+      --amber: #f59e0b;
+      --card-bg: #ffffff;
+      --card-border: rgba(108, 60, 224, 0.08);
+      --nav-blur: rgba(250, 249, 255, 0.85);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ── Nav ── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      background: var(--nav-blur);
+      border-bottom: 1px solid rgba(108, 60, 224, 0.06);
+    }
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 32px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--text);
+    }
+    .nav-brand img {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+    }
+    .nav-brand span {
+      font-weight: 800;
+      font-size: 17px;
+      letter-spacing: -0.02em;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text-muted);
+      font-size: 14px;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-cta {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      box-shadow: 0 4px 16px var(--accent-glow);
+    }
+    .nav-cta:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 24px var(--accent-glow-strong);
+    }
+
+    /* ── Hero ── */
+    .hero {
+      padding: 160px 32px 80px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -200px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 800px;
+      background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-icon {
+      width: 72px;
+      height: 72px;
+      border-radius: 20px;
+      margin: 0 auto 28px;
+      display: block;
+      box-shadow: 0 12px 40px rgba(108, 60, 224, 0.2);
+    }
+    .hero h1 {
+      font-size: clamp(36px, 5vw, 56px);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      max-width: 720px;
+      margin: 0 auto 20px;
+      background: linear-gradient(135deg, var(--text) 0%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero p {
+      font-size: 17px;
+      color: var(--text-muted);
+      max-width: 560px;
+      margin: 0 auto 36px;
+      line-height: 1.7;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 56px;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 14px 32px;
+      border-radius: 14px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.25s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 6px 24px var(--accent-glow);
+      font-family: inherit;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 36px var(--accent-glow-strong);
+    }
+    .btn-secondary {
+      background: transparent;
+      color: var(--text);
+      border: 2px solid rgba(108, 60, 224, 0.15);
+      padding: 12px 28px;
+      border-radius: 14px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.25s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: inherit;
+    }
+    .btn-secondary:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: translateY(-1px);
+    }
+    .hero-screenshot {
+      max-width: 860px;
+      margin: 0 auto;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.04);
+      position: relative;
+    }
+    .hero-screenshot img {
+      width: 100%;
+      display: block;
+    }
+    .hero-screenshot-placeholder {
+      width: 100%;
+      aspect-ratio: 16/10;
+      background: linear-gradient(135deg, #1a1533 0%, #2d1f5e 50%, #1a1533 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255,255,255,0.3);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+    }
+
+    /* ── Features ── */
+    .features {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 80px 32px;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .feature-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 36px 28px;
+      transition: all 0.3s;
+    }
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 48px var(--accent-glow);
+      border-color: rgba(108, 60, 224, 0.15);
+    }
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      font-size: 22px;
+    }
+    .feature-icon.purple { background: linear-gradient(135deg, #6c3ce0, #8b5cf6); }
+    .feature-icon.blue { background: linear-gradient(135deg, #4f46e5, #6366f1); }
+    .feature-icon.amber { background: linear-gradient(135deg, #f59e0b, #f97316); }
+    .feature-card h3 {
+      font-size: 17px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      letter-spacing: -0.01em;
+    }
+    .feature-card p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.65;
+    }
+
+    /* ── Workflow ── */
+    .workflow {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 60px 32px 100px;
+    }
+    .workflow-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+    }
+    .workflow-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      margin-bottom: 12px;
+    }
+    .workflow h2 {
+      font-size: clamp(28px, 3.5vw, 40px);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+    .workflow-desc {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.7;
+      margin-bottom: 28px;
+    }
+    .workflow-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .workflow-list li {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .workflow-list li::before {
+      content: '✓';
+      width: 24px;
+      height: 24px;
+      border-radius: 8px;
+      background: rgba(108, 60, 224, 0.1);
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+    .workflow-preview {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.04);
+    }
+    .preview-header {
+      font-size: 15px;
+      font-weight: 800;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .preview-item {
+      padding: 12px 16px;
+      background: rgba(108, 60, 224, 0.04);
+      border-radius: 12px;
+      margin-bottom: 8px;
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+    .preview-item strong {
+      color: var(--text);
+      font-weight: 700;
+    }
+    .preview-summary {
+      margin-top: 16px;
+      padding: 16px;
+      background: linear-gradient(135deg, rgba(108, 60, 224, 0.06), rgba(139, 92, 246, 0.04));
+      border: 1px solid rgba(108, 60, 224, 0.08);
+      border-radius: 14px;
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.7;
+      font-style: italic;
+    }
+    .preview-summary .ai-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--accent);
+      background: rgba(108, 60, 224, 0.1);
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-style: normal;
+      margin-left: 4px;
+    }
+
+    /* ── Pricing ── */
+    .pricing {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 80px 32px;
+      text-align: center;
+    }
+    .pricing h2 {
+      font-size: clamp(28px, 3.5vw, 36px);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 12px;
+    }
+    .pricing > p {
+      font-size: 15px;
+      color: var(--text-muted);
+      margin-bottom: 40px;
+    }
+    .pricing-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      text-align: left;
+    }
+    .pricing-card {
+      border-radius: 20px;
+      padding: 32px;
+      border: 1px solid var(--card-border);
+      background: var(--card-bg);
+      position: relative;
+    }
+    .pricing-card.pro {
+      border-color: rgba(108, 60, 224, 0.2);
+      box-shadow: 0 8px 32px var(--accent-glow);
+    }
+    .pricing-card.pro::before {
+      content: 'POPULAR';
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      color: #fff;
+      background: var(--accent);
+      padding: 4px 10px;
+      border-radius: 6px;
+    }
+    .pricing-card h3 {
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+    .pricing-card .price {
+      font-size: 36px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin: 16px 0;
+    }
+    .pricing-card .price span {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+    .pricing-card .price-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+    .pricing-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+    .pricing-list li {
+      font-size: 13px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .pricing-list li::before {
+      content: '✓';
+      color: var(--accent);
+      font-weight: 800;
+      font-size: 11px;
+    }
+    .pricing-btn {
+      width: 100%;
+      padding: 12px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+      text-align: center;
+      text-decoration: none;
+      display: block;
+    }
+    .pricing-btn.outline {
+      background: transparent;
+      border: 2px solid rgba(108, 60, 224, 0.15);
+      color: var(--text);
+    }
+    .pricing-btn.outline:hover { border-color: var(--accent); color: var(--accent); }
+    .pricing-btn.filled {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      box-shadow: 0 4px 16px var(--accent-glow);
+    }
+    .pricing-btn.filled:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 24px var(--accent-glow-strong);
+    }
+
+    /* ── CTA ── */
+    .cta {
+      background: var(--bg-dark);
+      padding: 100px 32px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta::before {
+      content: '';
+      position: absolute;
+      top: -100px;
+      right: -100px;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(108, 60, 224, 0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .cta h2 {
+      font-size: clamp(28px, 3.5vw, 40px);
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.03em;
+      margin-bottom: 16px;
+    }
+    .cta p {
+      font-size: 15px;
+      color: rgba(255, 255, 255, 0.5);
+      max-width: 480px;
+      margin: 0 auto 36px;
+      line-height: 1.7;
+    }
+    .cta .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-light));
+      box-shadow: 0 8px 32px rgba(108, 60, 224, 0.3);
+    }
+
+    /* ── Footer ── */
+    footer {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid rgba(108, 60, 224, 0.06);
+    }
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+    .footer-brand img {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+    }
+    .footer-links {
+      display: flex;
+      gap: 24px;
+    }
+    .footer-links a {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--accent); }
+    .footer-copy {
+      font-size: 11px;
+      color: rgba(107, 101, 133, 0.6);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .features-grid { grid-template-columns: 1fr; }
+      .workflow-grid { grid-template-columns: 1fr; }
+      .pricing-cards { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+      footer { flex-direction: column; gap: 16px; text-align: center; }
+    }
+
+    /* ── Animations ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-in {
+      animation: fadeUp 0.7s ease-out forwards;
+      opacity: 0;
+    }
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.2s; }
+    .delay-3 { animation-delay: 0.3s; }
+    .delay-4 { animation-delay: 0.4s; }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav>
+    <div class="nav-inner">
+      <a href="#" class="nav-brand">
+        <img src="icon.png" alt="QuickNote AI" />
+        <span>QuickNote AI</span>
+      </a>
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#workflow">Workflow</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#download" class="nav-cta">Download Free</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero" id="hero">
+    <img src="icon.png" alt="QuickNote AI" class="hero-icon animate-in" />
+    <h1 class="animate-in delay-1">Capture Ideas Instantly,<br/>AI Handles the Rest</h1>
+    <p class="animate-in delay-2">
+      Zero wait. Zero friction. Your AI-powered smart memo captures ideas, classifies notes, sends reminders — so every flash of inspiration becomes action.
+    </p>
+    <div class="hero-actions animate-in delay-3">
+      <a href="#download" class="btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download for macOS
+      </a>
+      <a href="#features" class="btn-secondary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 16 16 12 12 8"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        See How It Works
+      </a>
+    </div>
+    <div class="hero-screenshot animate-in delay-4">
+      <img src="screenshot.png" alt="QuickNote AI — Dashboard" />
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="features" id="features">
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon purple">⚡</div>
+        <h3>Instant Capture</h3>
+        <p>Press ⌘+Shift+N anywhere to summon the quick input. Type your thought and it's saved — no app switching, no friction.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon blue">🧠</div>
+        <h3>AI Auto-Classification</h3>
+        <p>AI analyzes every note and categorizes it as a reminder, to-do, idea, knowledge, or link. Automatically. Instantly.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon amber">🔔</div>
+        <h3>Smart Reminders</h3>
+        <p>Say "remind me in 5 minutes to call John" — AI parses the time and fires a notification. Set it and forget it.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Workflow -->
+  <section class="workflow" id="workflow">
+    <div class="workflow-grid">
+      <div>
+        <div class="workflow-tag">Your Digital Curator</div>
+        <h2>Every Day, AI Summarizes What Matters</h2>
+        <p class="workflow-desc">
+          QuickNote AI runs in the background as your personal assistant. It generates daily summaries, weekly digests, and cleans up expired items — so you always stay on top.
+        </p>
+        <ul class="workflow-list">
+          <li>Auto daily report at your chosen time</li>
+          <li>Weekly digest with AI-powered insights</li>
+          <li>Smart cleanup of stale reminders & tasks</li>
+          <li>All reports viewable in-app or as Markdown</li>
+        </ul>
+      </div>
+      <div class="workflow-preview">
+        <div class="preview-header">📋 Today's Summary</div>
+        <div class="preview-item">
+          <strong>✅ Completed:</strong> Ship v1.0 release, Review PR #42, Update landing page
+        </div>
+        <div class="preview-item">
+          <strong>📌 Pending:</strong> Write blog post about launch, Prepare Product Hunt submission
+        </div>
+        <div class="preview-item">
+          <strong>💡 Ideas:</strong> Add dark mode support, Integrate with Notion API
+        </div>
+        <div class="preview-summary">
+          "A productive day — 3 tasks completed, 2 pending for tomorrow. The launch prep is on track. Consider prioritizing the blog post before the PH submission."
+          <span class="ai-tag">AI Summary</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing -->
+  <section class="pricing" id="pricing">
+    <h2>Simple, Transparent Pricing</h2>
+    <p>Start free, upgrade when you're ready. No credit card required for the trial.</p>
+    <div class="pricing-cards">
+      <div class="pricing-card">
+        <h3>Free</h3>
+        <div class="price">$0 <span>/ forever</span></div>
+        <div class="price-desc">Perfect for getting started</div>
+        <ul class="pricing-list">
+          <li>10 notes per day</li>
+          <li>AI classification</li>
+          <li>Global hotkey</li>
+          <li>Basic reminders</li>
+        </ul>
+        <a href="#download" class="pricing-btn outline">Get Started</a>
+      </div>
+      <div class="pricing-card pro">
+        <h3>Pro</h3>
+        <div class="price">$4.90 <span>/ month</span></div>
+        <div class="price-desc">15-day free trial included</div>
+        <ul class="pricing-list">
+          <li>Unlimited notes</li>
+          <li>AI classification & summaries</li>
+          <li>Smart timed reminders</li>
+          <li>Auto daily & weekly reports</li>
+          <li>Data export & Markdown reports</li>
+          <li>Custom global hotkey</li>
+          <li>Priority support</li>
+        </ul>
+        <a href="#download" class="pricing-btn filled">Start Free Trial</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta" id="download">
+    <h2>Start Your Smart Note Journey</h2>
+    <p>
+      Download QuickNote AI and experience AI-powered note-taking. Available now on macOS, with Windows and Linux coming soon.
+    </p>
+    <a href="#" class="btn-primary" id="download-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+      Download for macOS
+    </a>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-brand">
+      <img src="icon.png" alt="QuickNote AI" />
+      <span>QuickNote AI</span>
+    </div>
+    <div class="footer-links">
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+      <a href="mailto:support@quicknote.ai">Contact</a>
+    </div>
+    <div class="footer-copy">© 2026 QuickNote AI. All rights reserved.</div>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.animationPlayState = 'running';
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.feature-card, .workflow-grid > div, .pricing-card').forEach(el => {
+      el.classList.add('animate-in');
+      el.style.animationPlayState = 'paused';
+      observer.observe(el);
+    });
+  </script>
+
+</body>
+</html>
